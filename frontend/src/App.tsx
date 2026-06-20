@@ -255,7 +255,7 @@ export default function App() {
             </Section>
 
             {/* CMU Soccer */}
-            <Section icon="⚽" title="CMU Women's Soccer — Grace #4" accent="border-red-500">
+            <Section icon="⚽" title="CMU Women's Soccer — Grace #33" accent="border-red-500">
               <div className="flex items-center gap-4 mb-4">
                 <a
                   href="https://athletics.cmu.edu/sports/wsoc/index"

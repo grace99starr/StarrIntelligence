@@ -20,7 +20,7 @@ from tools import BRIEF_DB
 
 load_dotenv()
 
-PHOTOS_DIR = os.path.abspath(os.getenv("PHOTOS_DIR", "../photos"))
+PHOTOS_DIR = os.getenv("PHOTOS_DIR", os.path.abspath("../photos"))
 HEALTH_SECRET = os.getenv("HEALTH_WEBHOOK_SECRET", "")
 
 scheduler = AsyncIOScheduler()
@@ -101,8 +101,7 @@ async def list_photos():
 
 
 @app.post("/api/photos/upload")
-async def upload_photos(request: Request, files: list = None):
-    from fastapi import UploadFile, File
+async def upload_photos(request: Request):
     auth = request.headers.get("Authorization", "")
     if HEALTH_SECRET and auth != f"Bearer {HEALTH_SECRET}":
         raise HTTPException(status_code=401, detail="Unauthorized")
@@ -111,15 +110,16 @@ async def upload_photos(request: Request, files: list = None):
     uploaded = 0
     os.makedirs(PHOTOS_DIR, exist_ok=True)
 
-    for key in form:
-        file = form[key]
-        if hasattr(file, "filename") and file.filename:
-            safe_name = os.path.basename(file.filename)
-            dest = os.path.join(PHOTOS_DIR, safe_name)
-            content = await file.read()
-            with open(dest, "wb") as f:
-                f.write(content)
-            uploaded += 1
+    for key in form.keys():
+        file = form.getlist(key)
+        for f in file:
+            if hasattr(f, "filename") and f.filename:
+                safe_name = os.path.basename(f.filename)
+                dest = os.path.join(PHOTOS_DIR, safe_name)
+                content = await f.read()
+                with open(dest, "wb") as fp:
+                    fp.write(content)
+                uploaded += 1
 
     return {"uploaded": uploaded}
 

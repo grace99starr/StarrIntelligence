@@ -32,9 +32,13 @@ export interface Brief {
     news?: NewsArticle[]
   }
   family_photo: {
-    filenames: string[]
-    filename?: string | null
+    filename: string | null
     total_photos?: number
+  }
+  cmu_soccer: {
+    news?: NewsArticle[]
+    athletics_url?: string
+    roster_url?: string
   }
   health_summary: string
   generated_at: string

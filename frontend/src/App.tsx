@@ -170,18 +170,22 @@ export default function App() {
                 )}
               </Section>
 
-              {/* Family Photos */}
-              <Section icon="📸" title="Photos of the Day" accent="border-pink-500" headerRight={<a href="/photos" className="text-xs text-gray-400 hover:text-gold-400 transition-colors underline underline-offset-2">Manage →</a>}>
-                {(brief.family_photo?.filenames?.length > 0 || brief.family_photo?.filename) ? (
+              {/* Family Photo */}
+              <Section icon="📸" title="Photo of the Day" accent="border-pink-500" headerRight={<a href="/photos" className="text-xs text-gray-400 hover:text-gold-400 transition-colors underline underline-offset-2">Manage →</a>}>
+                {brief.family_photo?.filename ? (
                   <div className="flex flex-col gap-3">
-                    {(brief.family_photo.filenames ?? (brief.family_photo.filename ? [brief.family_photo.filename] : [])).map((filename, i) => (
+                    <a
+                      href={`${API_BASE}/api/photo/${encodeURIComponent(brief.family_photo.filename)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block group"
+                    >
                       <img
-                        key={i}
-                        src={`${API_BASE}/api/photo/${encodeURIComponent(filename)}`}
+                        src={`${API_BASE}/api/photo/${encodeURIComponent(brief.family_photo.filename)}`}
                         alt="Family photo"
-                        className="w-full object-cover rounded-xl max-h-56 bg-[#1c1c1c]"
+                        className="w-full object-cover rounded-xl max-h-72 group-hover:opacity-90 transition-opacity cursor-zoom-in"
                       />
-                    ))}
+                    </a>
                     {brief.family_photo.total_photos && (
                       <p className="text-xs text-gray-500 text-center">{brief.family_photo.total_photos} photos in library</p>
                     )}
@@ -248,6 +252,33 @@ export default function App() {
               {brief.caitlin_clark?.news?.map((a, i) => (
                 <NewsCard key={i} article={a} index={i} />
               ))}
+            </Section>
+
+            {/* CMU Soccer */}
+            <Section icon="⚽" title="CMU Women's Soccer — Grace #4" accent="border-red-500">
+              <div className="flex items-center gap-4 mb-4">
+                <a
+                  href="https://athletics.cmu.edu/sports/wsoc/index"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-gray-400 hover:text-gold-400 transition-colors underline underline-offset-2"
+                >
+                  CMU Athletics →
+                </a>
+                <a
+                  href="https://athletics.cmu.edu/sports/wsoc/roster"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-gray-400 hover:text-gold-400 transition-colors underline underline-offset-2"
+                >
+                  Roster & Stats →
+                </a>
+              </div>
+              {brief.cmu_soccer?.news?.length > 0 ? (
+                brief.cmu_soccer.news.map((a, i) => <NewsCard key={i} article={a} index={i} />)
+              ) : (
+                <p className="text-gray-500 text-sm">No recent CMU soccer news.</p>
+              )}
             </Section>
 
             {/* Health / Workout */}

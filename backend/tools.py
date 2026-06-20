@@ -11,7 +11,7 @@ load_dotenv()
 
 tavily = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"))
 PHOTOS_DIR = os.getenv("PHOTOS_DIR", "../photos")
-BRIEF_DB = os.getenv("BRIEF_DB", "briefs.db")
+BRIEF_DB = os.getenv("BRIEF_DB", "/tmp/briefs.db")
 HEALTH_WEBHOOK_SECRET = os.getenv("HEALTH_WEBHOOK_SECRET", "")
 
 TOOL_DEFINITIONS = [
@@ -47,7 +47,16 @@ TOOL_DEFINITIONS = [
     },
     {
         "name": "get_family_photo",
-        "description": "Select 3 random family photos to feature in today's brief. Returns a list of filenames.",
+        "description": "Select 1 random family photo to feature in today's brief. Returns the filename.",
+        "input_schema": {
+            "type": "object",
+            "properties": {},
+            "required": []
+        }
+    },
+    {
+        "name": "get_cmu_soccer",
+        "description": "Get the latest Carnegie Mellon University women's soccer news, schedule, and stats for Grace Starr (#4, midfielder).",
         "input_schema": {
             "type": "object",
             "properties": {},
@@ -205,11 +214,10 @@ def get_family_photo() -> dict:
     photos = [f for f in os.listdir(photos_path) if os.path.splitext(f.lower())[1] in extensions]
 
     if not photos:
-        return {"error": "No photos found in directory", "filenames": []}
+        return {"error": "No photos found in directory", "filename": None}
 
-    count = min(3, len(photos))
-    chosen = random.sample(photos, count)
-    return {"filenames": chosen, "total_photos": len(photos)}
+    chosen = random.choice(photos)
+    return {"filename": chosen, "total_photos": len(photos)}
 
 
 def get_health_data() -> dict:
@@ -234,6 +242,22 @@ def get_health_data() -> dict:
         conn.close()
 
 
+def get_cmu_soccer() -> dict:
+    try:
+        schedule = search_news("Carnegie Mellon women's soccer schedule results 2025 2026", max_results=2)
+        grace = search_news("Grace Starr CMU Carnegie Mellon women's soccer", max_results=2)
+        athletics = search_news("CMU Carnegie Mellon athletics women's soccer", max_results=2)
+        return {
+            "schedule_news": schedule.get("articles", []),
+            "grace_stats_news": grace.get("articles", []),
+            "athletics_news": athletics.get("articles", []),
+            "athletics_url": "https://athletics.cmu.edu/sports/wsoc/index",
+            "roster_url": "https://athletics.cmu.edu/sports/wsoc/roster"
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
 def dispatch_tool(name: str, inputs: dict) -> str:
     if name == "search_news":
         result = search_news(inputs["query"], inputs.get("max_results", 3))
@@ -243,6 +267,8 @@ def dispatch_tool(name: str, inputs: dict) -> str:
         result = get_caitlin_clark_update()
     elif name == "get_family_photo":
         result = get_family_photo()
+    elif name == "get_cmu_soccer":
+        result = get_cmu_soccer()
     elif name == "get_health_data":
         result = get_health_data()
     else:

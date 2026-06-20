@@ -10,7 +10,7 @@ from tools import TOOL_DEFINITIONS, dispatch_tool
 load_dotenv()
 
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-BRIEF_DB = os.getenv("BRIEF_DB", "briefs.db")
+BRIEF_DB = os.getenv("BRIEF_DB", "/tmp/briefs.db")
 
 SYSTEM_PROMPT = """You are generating the morning executive intelligence brief for Brett Starr.
 
@@ -32,7 +32,8 @@ REQUIRED SECTIONS in your JSON output:
 4. ciso_moves — executive leadership moves, open CISO roles, or industry people news (search for this)
 5. warriors — object with keys: record (string), last_game (object with away_team, home_team, away_score, home_score, date), next_game (object with away_team, home_team, date, venue), news (array of articles)
 6. caitlin_clark — object with keys: last_game (object with away_team, home_team, away_score, home_score, date), next_game (object with away_team, home_team, date), news (array of articles)
-7. family_photo — object with key "filenames" (array of 3 photo filenames from the get_family_photo tool) and "total_photos" (integer)
+6b. cmu_soccer — object with keys: news (array of articles), athletics_url (string), roster_url (string)
+7. family_photo — object with key "filename" (single photo filename string from the get_family_photo tool) and "total_photos" (integer)
 8. health_summary — workout and macro summary if data is available, otherwise an encouraging note
 9. generated_at — ISO timestamp
 
@@ -42,6 +43,7 @@ After gathering all data with tools, output ONLY a valid JSON object with those 
 
 
 def init_db():
+    os.makedirs(os.path.dirname(BRIEF_DB), exist_ok=True)
     conn = sqlite3.connect(BRIEF_DB)
     conn.execute("""
         CREATE TABLE IF NOT EXISTS briefs (

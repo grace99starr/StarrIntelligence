@@ -30,7 +30,11 @@ export default function PhotoManager() {
   const fetchPhotos = async () => {
     const res = await fetch(`${API_BASE}/api/photos`)
     const data = await res.json()
-    setPhotos(data.photos || [])
+    const photos = (data.photos || []).map((p: Photo) => ({
+      ...p,
+      url: `${API_BASE}${p.url}`
+    }))
+    setPhotos(photos)
   }
 
   useEffect(() => {

@@ -171,7 +171,7 @@ export default function App() {
               </Section>
 
               {/* Family Photos */}
-              <Section icon="📸" title="Photos of the Day" accent="border-pink-500">
+              <Section icon="📸" title="Photos of the Day" accent="border-pink-500" headerRight={<a href="/photos" className="text-xs text-gray-400 hover:text-gold-400 transition-colors underline underline-offset-2">Manage →</a>}>
                 {(brief.family_photo?.filenames?.length > 0 || brief.family_photo?.filename) ? (
                   <div className="flex flex-col gap-3">
                     {(brief.family_photo.filenames ?? (brief.family_photo.filename ? [brief.family_photo.filename] : [])).map((filename, i) => (

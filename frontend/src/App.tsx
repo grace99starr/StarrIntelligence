@@ -274,8 +274,8 @@ export default function App() {
                   Roster & Stats →
                 </a>
               </div>
-              {brief.cmu_soccer?.news?.length > 0 ? (
-                brief.cmu_soccer.news.map((a, i) => <NewsCard key={i} article={a} index={i} />)
+              {(brief.cmu_soccer?.news?.length ?? 0) > 0 ? (
+                brief.cmu_soccer!.news!.map((a, i) => <NewsCard key={i} article={a} index={i} />)
               ) : (
                 <p className="text-gray-500 text-sm">No recent CMU soccer news.</p>
               )}

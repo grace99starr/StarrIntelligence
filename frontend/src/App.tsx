@@ -179,8 +179,7 @@ export default function App() {
                         key={i}
                         src={`${API_BASE}/api/photo/${encodeURIComponent(filename)}`}
                         alt="Family photo"
-                        className="w-full object-cover rounded-xl max-h-56"
-                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                        className="w-full object-cover rounded-xl max-h-56 bg-[#1c1c1c]"
                       />
                     ))}
                     {brief.family_photo.total_photos && (

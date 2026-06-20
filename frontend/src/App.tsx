@@ -64,7 +64,7 @@ export default function App() {
   const generatedTime = brief?.generated_at
     ? new Date(brief.generated_at).toLocaleString('en-US', {
         weekday: 'long', month: 'long', day: 'numeric',
-        hour: 'numeric', minute: '2-digit', timeZoneName: 'short'
+        hour: 'numeric', minute: '2-digit', timeZone: 'America/Chicago', timeZoneName: 'short'
       })
     : ''
 

@@ -39,3 +39,7 @@ Apple Watch data is pushed via Health Auto Export app using a webhook endpoint o
 ---
 
 *Built with ❤️ by Grace — Father's Day 2026*
+
+---
+
+🤖 Built with [Claude Code](https://claude.ai/code)

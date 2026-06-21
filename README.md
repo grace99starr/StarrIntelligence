@@ -1,6 +1,6 @@
 # ⭐ Starr Intelligence
 
-A personalized AI morning brief app built as a Father's Day gift for Brett Starr.
+A personalized AI morning brief app built as a Father's Day gift.
 
 Every morning at 1 AM CST, an AI agent automatically generates a rich, personalized daily brief — delivered fresh at starr-intelligence.vercel.app.
 
